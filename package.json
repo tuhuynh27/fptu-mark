@@ -1,6 +1,6 @@
 {
   "name": "fptu-mark",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "FPT University get mark via CLI",
   "main": "index.js",
   "scripts": {
