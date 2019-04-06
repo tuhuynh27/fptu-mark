@@ -1,0 +1,38 @@
+{
+  "name": "fptu-mark",
+  "version": "1.0.4",
+  "description": "FPT University get mark via CLI",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tu Huynh <huynhminhtufu@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^7.0.0",
+    "figlet": "^1.2.1",
+    "fs-extra": "^7.0.1",
+    "js-yaml": "^3.13.1",
+    "meow": "^5.0.0",
+    "prompt-console": "^1.0.11",
+    "puppeteer": "^1.14.0"
+  },
+  "bin": {
+    "fptu-mark": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE",
+    "yarn.lock"
+  ],
+  "homepage": "https://fptu.tech",
+  "repository": {
+    "url": "https://github.com/huynhminhtufu/fptu-mark"
+  },
+  "keywords": [
+    "fptu",
+    "cli"
+  ]
+}
