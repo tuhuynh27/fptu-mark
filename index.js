@@ -6,6 +6,7 @@ const figlet = require("figlet");
 const command = require("meow");
 const fs = require("fs-extra");
 const yaml = require("js-yaml");
+const axios = require("axios");
 
 // Command line definition.
 const cli = command(`
@@ -191,6 +192,25 @@ if (!source) {
     console.log("Average: ", average);
     console.log("Status: ", status);
     console.log("====================");
+
+    const slackStr = `Điểm của *${email}*, môn *${
+      listSubject[subIndex]
+    }*, kì *${season}* là:
+    
+Final: ${finalFirst}
+Retake: ${finalSecond}
+Average: ${average}
+Status: ${status}
+
+*Update mỗi 15p nha, yên tâm chờ tiếp.* :kissing:
+    `;
+
+    axios.post(
+      "https://hooks.slack.com/services/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",
+      {
+        text: slackStr
+      }
+    );
 
     await browser.close();
   } catch (e) {}
