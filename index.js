@@ -31,7 +31,8 @@ if (!source) {
       })
       .catch(error => {
         if (error.code === "ENOENT") {
-          throw new Error(`${source} doesn't exist`);
+          console.error(`File ${source} doesn't exist`);
+          process.exit(1);
         }
 
         throw error;
