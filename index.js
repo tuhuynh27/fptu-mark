@@ -130,6 +130,8 @@ if (!source) {
     });
     if (index || index === 0) {
       subIndex = parseInt(index) || 0;
+
+      if (subIndex === -1) subIndex = listSubject.length - 1;
     } else {
       subIndex = await new Promise(function(resolve) {
         prompt.ask(
