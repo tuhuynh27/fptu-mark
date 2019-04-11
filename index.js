@@ -128,5 +128,7 @@ if (!source) {
     await browser.waitFor(1000000);
 
     await browser.close();
-  } catch (e) {}
+  } catch (e) {
+    console.log("Error:", e);
+  }
 })();
