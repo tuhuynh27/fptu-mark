@@ -68,11 +68,22 @@ if (!source) {
   );
 
   try {
-    const browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"]
-    });
+    // const browser = await puppeteer.launch({
+    //   args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    // });
+
+    const browser = await puppeteer.launch({ headless: false });
 
     const page = await browser.newPage();
+
+    page.on("request", interceptedRequest => {
+      if (
+        interceptedRequest.url().endsWith("http://fap.fpt.edu.vn/LogOut.aspx")
+      )
+        interceptedRequest.abort();
+      else interceptedRequest.continue();
+    });
+
     await page.goto("http://fap.fpt.edu.vn/");
 
     // Select FUHCM
@@ -101,119 +112,20 @@ if (!source) {
     await popup.type('#password input[type="password"]', password, {
       delay: 10
     });
+    await page.waitFor(1000);
+    await page.setRequestInterception(true);
     await popup.click("#passwordNext");
 
-    // Go to Mark Report
-    await page.waitFor('a[href^="Grade/StudentGrade.aspx"]');
-    await page.click('a[href^="Grade/StudentGrade.aspx"]');
+    await page.waitFor(5000);
 
-    // Select subject
-    await page.waitFor("[href*='?rollNumber']");
-
-    // Get subject index
-    let subIndex;
-    listSubject = await page.evaluate(
-      ({ id, season }) => {
-        const queryString = `[href*='?rollNumber=${id}&term=${season}']`;
-        const listSubjectDOM = Array.from(
-          document.querySelectorAll(queryString)
-        );
-
-        return listSubjectDOM.map(e => e.innerText);
-      },
-      { id, season }
-    );
-
-    console.log("List mon da co diem:");
-    listSubject.forEach((e, index) => {
-      console.log(`[${index}] - ${e}`);
-    });
-    if (index || index === 0) {
-      subIndex = parseInt(index) || 0;
-
-      if (subIndex === -1) subIndex = listSubject.length - 1;
-    } else {
-      subIndex = await new Promise(function(resolve) {
-        prompt.ask(
-          [
-            {
-              question: `Ban muon xem mon nao, nhap so [0 - ${listSubject.length -
-                1}]:`,
-              validator: "notNULL",
-              name: "index"
-            }
-          ],
-          response => {
-            let parseData = parseInt(response.index) || 0;
-            if (parseData > listSubject.length - 1 || parseData < 0)
-              parseData = 0;
-
-            resolve(parseData);
-          }
-        );
-      });
-    }
-
-    try {
-      await page.evaluate(
-        ({ id, season, subIndex }) => {
-          const queryString = `[href*='?rollNumber=${id}&term=${season}']`;
-          const listSubjectDOM = document.querySelectorAll(queryString);
-
-          listSubjectDOM[subIndex].click();
-        },
-        { id, season, subIndex }
-      );
-    } catch (e) {
-      console.log("Co gi do sai sai, khong chon duoc mon, xem lai index thu!");
-    }
-
-    // Collect data
-    await page.waitFor("table[summary=Report] tr td");
-    const data = await page.evaluate(() => {
-      const tds = Array.from(
-        document.querySelectorAll("table[summary=Report] tr td")
-      );
-      return tds.map(td => td.innerHTML);
+    list = await page.evaluate(() => {
+      const listDom = Array.from(document.querySelectorAll("a.anew"));
+      return listDom.map(e => e.innerText);
     });
 
-    // Print result
-    const result = data.slice(Math.max(data.length - 30, 1));
+    await console.log(list);
 
-    const statusHTML = result[result.length - 1];
-    const status = statusHTML.replace(/<(?:.|\n)*?>/gm, "");
-    const average = result[result.length - 3];
-    const finalFirst = result[result.length - 16] || "Not yet";
-    const finalSecond = result[result.length - 7] || "Not yet";
-
-    console.log(
-      `\nDiem cua ${email}, mon ${listSubject[subIndex]}, ki ${season}`
-    );
-    console.log("====================");
-    console.log("Final: ", finalFirst);
-    console.log("Retake: ", finalSecond);
-    console.log("Average: ", average);
-    console.log("Status: ", status);
-    console.log("====================");
-
-    const slackStr = `Điểm của *${email}*, môn *${
-      listSubject[subIndex]
-    }*, kì *${season}* là:
-    
-Final: ${finalFirst}
-Retake: ${finalSecond}
-Average: ${average}
-Status: ${status}
-
-*Update mỗi 15p nha, yên tâm chờ tiếp.* :kissing:
-    `;
-
-    axios.post(
-      "https://hooks.slack.com/services/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",
-      {
-        text: slackStr
-      }
-    );
+    await browser.waitFor(1000000);
 
     await browser.close();
   } catch (e) {}
