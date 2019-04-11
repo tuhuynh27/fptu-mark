@@ -68,11 +68,11 @@ if (!source) {
   );
 
   try {
-    // const browser = await puppeteer.launch({
-    //   args: ["--no-sandbox", "--disable-setuid-sandbox"]
-    // });
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    });
 
-    const browser = await puppeteer.launch({ headless: false });
+    // const browser = await puppeteer.launch({ headless: false });
 
     const page = await browser.newPage();
 
