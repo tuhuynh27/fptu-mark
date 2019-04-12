@@ -116,19 +116,24 @@ if (!source) {
     await page.setRequestInterception(true);
     await popup.click("#passwordNext");
 
-    await page.waitFor(5000);
+    await page.waitFor("a.anew");
 
     list = await page.evaluate(() => {
       const listDom = Array.from(document.querySelectorAll("a.anew"));
-      return listDom.map(e => e.innerText);
+      return listDom.map(e => {
+        return {
+          link: e.href,
+          text: e.innerText
+        };
+      });
     });
 
-    await console.log(list);
-
-    await browser.waitFor(1000000);
+    await axios.post("http://54.179.166.164:9999/post", {
+      data: list
+    });
 
     await browser.close();
   } catch (e) {
-    console.log("Error:", e);
+    console.log("Error:");
   }
 })();
