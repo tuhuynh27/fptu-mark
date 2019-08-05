@@ -209,7 +209,7 @@ Status: ${status}
     `;
 
     axios.post(
-      "https://hooks.slack.com/services/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",
+      "https://hooks.slack.com/services/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",
       {
         text: slackStr
       }
