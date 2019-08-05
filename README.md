@@ -7,7 +7,7 @@ $ docker build -t fptu-mark .
 ```
 
 ```
-docker run -it fptu-mark
+$ docker run -it fptu-mark
 ```
 
 ## Installation
