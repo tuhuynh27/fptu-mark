@@ -1,5 +1,15 @@
 A simple CLI for scaffolding FPTU.tech projects.
 
+## Docker
+
+```
+$ docker build -t fptu-mark .
+```
+
+```
+docker run -it fptu-mark
+```
+
 ## Installation
 
 Prerequisites: Node.js (>=6.x, 8.x preferred), npm version 3+ and Git.

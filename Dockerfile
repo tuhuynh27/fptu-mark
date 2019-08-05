@@ -15,4 +15,4 @@ ENTRYPOINT ["node","index.js", "data.yml"]
 # docker build -t fptu-mark .
 
 # This is docker run command:
-# docker run -it --name fptu-mark fptu-mark
+# docker run -it fptu-mark
