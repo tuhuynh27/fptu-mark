@@ -1,16 +1,15 @@
-FROM node:10.15.3-alpine as builder
+FROM buildkite/puppeteer:latest
 
 RUN mkdir -p /root/src/app
 WORKDIR /root/src/app
 ENV PATH /root/src/app/node_modules/.bin:$PATH
 
-COPY . .
-
+COPY package.json yarn.lock ./
 RUN npm install
 
-EXPOSE 3000
+COPY . .
 
-ENTRYPOINT ["npm","run","start"]
+ENTRYPOINT ["node","index.js", "data.yml"]
 
 # This is docker build command: 
 # docker build -t fptu-mark .
